@@ -1,8 +1,10 @@
-from .base_controller import BaseController, router
-from models.product import Product  # Assuming Product is a SQLAlchemy model
+from .base_controller_impl import BaseControllerImpl
+from models.product import Product
 
 
-class ProductController(BaseController):
+class ProductController(BaseControllerImpl):
     model = Product
 
-product_router = router
+    def __init__(self):
+        super().__init__()
+        self.router.include_router(self.router, prefix="/product")

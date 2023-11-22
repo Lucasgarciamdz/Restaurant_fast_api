@@ -6,4 +6,4 @@ Base = declarative_base()
 
 class BaseModel(Base):
     __abstract__ = True
-    id_k = Column(Integer, primary_key=True, index=True)
+    id_key = Column(Integer, primary_key=True, index=True)

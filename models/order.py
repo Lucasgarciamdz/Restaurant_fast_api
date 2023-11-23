@@ -25,6 +25,7 @@ class Order(BaseModel):
     delivery_method = Column(Enum(DeliveryMethod))
     status = Column(Enum(Status))
 
+    order_details = relationship("OrderDetail", back_populates="order")
+
     client_id = Column(Integer, ForeignKey("clients.id"))
     bill_id = Column(Integer, ForeignKey("bills.id"))
-    

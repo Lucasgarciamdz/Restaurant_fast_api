@@ -1,7 +1,5 @@
 from sqlalchemy import Column, String, Float, Date, Enum
-from sqlalchemy.orm import relationship
 from models.base_model import BaseModel
-from sqlalchemy import Column, Integer, ForeignKey
 from enum import Enum as PyEnum
 
 

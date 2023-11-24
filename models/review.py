@@ -1,7 +1,6 @@
-from sqlalchemy import Column, String, Float
+from sqlalchemy import Column, String, Float, Integer, ForeignKey
 from sqlalchemy.orm import relationship
 from models.base_model import BaseModel
-from sqlalchemy import Column, Integer, ForeignKey
 
 
 class Review(BaseModel):

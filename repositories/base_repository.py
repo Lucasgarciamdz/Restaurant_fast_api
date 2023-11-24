@@ -7,21 +7,21 @@ class BaseRepository(ABC):
     model: BaseModel
 
     @abstractmethod
-    def find_all(self, db: Session):
+    def find_all(self):
         pass
 
     @abstractmethod
-    def find_by_id(self, db: Session, id_key: int):
+    def find_by_id(self, id_key: int):
         pass
 
     @abstractmethod
-    def save(self, db: Session, entity: BaseModel):
+    def save(self, entity: BaseModel):
         pass
 
     @abstractmethod
-    def update(self, db: Session, id_key: int, entity: BaseModel):
+    def update(self, id_key: int, entity: BaseModel):
         pass
 
     @abstractmethod
-    def delete(self, db: Session, id_key: int):
+    def delete(self, id_key: int):
         pass

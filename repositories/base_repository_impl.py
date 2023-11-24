@@ -14,35 +14,37 @@ class BaseRepositoryImpl(BaseRepository):
     def __init__(self):
         self.logger = logging.getLogger(__name__)
 
-    def find_all(self, db: Session):
-        return db.query(self.model).all()
+    def _get_instance(self, id_key: int):
+        with Session() as session:
+            instance = session.query(self.model).get(id_key)
+            if instance is None:
+                self.logger.error(f"No {self.model.__name__} instance found with id {id_key}")
+                raise InstanceNotFoundError(f"No {self.model.__name__} instance found with id {id_key}")
+            return instance
 
-    def find_by_id(self, db: Session, id_key: int):
-        instance = db.query(self.model).get(id_key)
-        if instance is None:
-            self.logger.error(f"No {self.model.__name__} instance found with id {id_key}")
-            raise InstanceNotFoundError(f"No {self.model.__name__} instance found with id {id_key}")
-        return instance
+    def find_all(self):
+        with Session() as session:
+            return session.query(self.model).all()
 
-    def save(self, db: Session, entity: BaseModel):
-        db.add(entity)
-        db.commit()
-        db.refresh(entity)
-        return entity
+    def find_by_id(self, id_key: int):
+        return self._get_instance(id_key)
 
-    def update(self, db: Session, id_key: int, entity: BaseModel):
-        instance = db.query(self.model).get(id_key)
-        if instance is None:
-            self.logger.error(f"No {self.model.__name__} instance found with id {id_key}")
-            raise InstanceNotFoundError(f"No {self.model.__name__} instance found with id {id_key}")
-        instance.update(vars(entity))
-        db.commit()
-        return instance
+    def save(self, entity: BaseModel):
+        with Session() as session:
+            session.add(entity)
+            session.commit()
+            session.refresh(entity)
+            return entity
 
-    def delete(self, db: Session, id_key: int):
-        instance = db.query(self.model).get(id_key)
-        if instance is None:
-            self.logger.error(f"No {self.model.__name__} instance found with id {id_key}")
-            raise InstanceNotFoundError(f"No {self.model.__name__} instance found with id {id_key}")
-        db.delete(instance)
-        db.commit()
+    def update(self, id_key: int, entity: BaseModel):
+        with Session() as session:
+            instance = self._get_instance(id_key)
+            instance.update(vars(entity))
+            session.commit()
+            return instance
+
+    def delete(self, id_key: int):
+        with Session() as session:
+            instance = self._get_instance(id_key)
+            session.delete(instance)
+            session.commit()

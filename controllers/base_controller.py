@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
-from sqlalchemy.orm import Session
+from schemas.base_schema import BaseSchema
 
-from models.base_model import BaseModel
 from services.base_service import BaseService
 
 
@@ -17,11 +16,11 @@ class BaseController(ABC):
         pass
 
     @abstractmethod
-    def save(self, entity: BaseModel):
+    def save(self, entity: BaseSchema):
         pass
 
     @abstractmethod
-    def update(self, id_key: int, entity: BaseModel):
+    def update(self, id_key: int, entity: BaseSchema):
         pass
 
     @abstractmethod

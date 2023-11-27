@@ -1,4 +1,5 @@
 from fastapi import APIRouter, HTTPException
+from schemas.base_schema import BaseSchema
 from controllers.base_controller import BaseController
 from models.base_model import BaseModel
 from services.base_service_impl import BaseServiceImpl
@@ -23,11 +24,11 @@ class BaseControllerImpl(BaseController):
         return item
 
     @router.post("/")
-    def save(self, entity: BaseModel):
+    def save(self, entity: BaseSchema):
         return self.service.save(entity)
 
     @router.put("/{id_key}")
-    def update(self, id_key: int, entity: BaseModel):
+    def update(self, id_key: int, entity: BaseSchema):
         item = self.service.update(id_key, entity)
         if item is None:
             raise HTTPException(status_code=404, detail="Item not found")

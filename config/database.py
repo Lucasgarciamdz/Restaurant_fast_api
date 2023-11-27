@@ -13,8 +13,8 @@ POSTGRES_USER = os.getenv('POSTGRES_USER')
 POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD')
 
 DATABASE_URI = f'postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}'
-print(DATABASE_URI)
 
+print(DATABASE_URI)
 engine = create_engine(DATABASE_URI)
 Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 

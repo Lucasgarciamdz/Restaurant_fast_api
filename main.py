@@ -1,37 +1,31 @@
-import logging
-
-import uvicorn
-from fastapi import FastAPI, Request, Response
-
-from config.database import SessionLocal
+from config.database import engine
 from controllers.base_controller_impl import router
-
-# Initialize logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-app = FastAPI()
+from models.base_model import BaseModel
+from fastapi import FastAPI
+import uvicorn
 
 
-# Middleware for database session management
-@app.middleware("http")
-async def db_session_middleware(request: Request, call_next):
-    response = Response("Internal server error", status_code=500)
-    try:
-        request.state.db = SessionLocal()
-        response = await call_next(request)
-    finally:
-        request.state.db.close()
-    return response
-
-# Include your routers
-app.include_router(router)
+def create_database():
+    # Create all tables in the database
+    BaseModel.metadata.create_all(bind=engine)
 
 
-# Main function to run the app
-def main():
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+def create_fastapi_app():
+    # Create FastAPI instance
+    fastapi_app = FastAPI()
+
+    # Include your routers
+    fastapi_app.include_router(router)
+    # Add other routers here
+
+    return fastapi_app
+
+
+def run_app(fastapi_app: FastAPI):
+    uvicorn.run(fastapi_app, host="0.0.0.0", port=8000)
 
 
 if __name__ == "__main__":
-    main()
+    create_database()
+    app = create_fastapi_app()
+    run_app(app)

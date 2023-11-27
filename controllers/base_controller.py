@@ -1,29 +1,29 @@
 from abc import ABC, abstractmethod
 from sqlalchemy.orm import Session
-from typing import Type, TypeVar
 
-ModelType = TypeVar("ModelType")
+from models.base_model import BaseModel
+from services.base_service import BaseService
 
 
 class BaseController(ABC):
-    model: Type[ModelType]
+    service: BaseService
 
     @abstractmethod
-    def get_all(self, db: Session):
+    def get_all(self):
         pass
 
     @abstractmethod
-    def get_one(self, db: Session, id_key: int):
+    def get_one(self, id_key: int):
         pass
 
     @abstractmethod
-    def save(self, db: Session, entity: ModelType):
+    def save(self, entity: BaseModel):
         pass
 
     @abstractmethod
-    def update(self, db: Session, id_key: int, entity: ModelType):
+    def update(self, id_key: int, entity: BaseModel):
         pass
 
     @abstractmethod
-    def delete(self, db: Session, id_key: int):
+    def delete(self, id_key: int):
         pass

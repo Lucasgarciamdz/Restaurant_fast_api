@@ -1,10 +1,12 @@
 from abc import ABC, abstractmethod
+from typing import Type
+
 from sqlalchemy.orm import Session
 from models.base_model import BaseModel
 
 
 class BaseRepository(ABC):
-    model: BaseModel
+    model: Type[BaseModel]
 
     @abstractmethod
     def find_all(self):

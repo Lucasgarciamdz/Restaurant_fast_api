@@ -1,50 +1,43 @@
 from fastapi import APIRouter, HTTPException
-from sqlalchemy.orm import Session
-from base_controller import BaseController
+from controllers.base_controller import BaseController
 from models.base_model import BaseModel
+from services.base_service_impl import BaseServiceImpl
 
 router = APIRouter()
 
 
 class BaseControllerImpl(BaseController):
-    model = BaseModel
+    def __init__(self, model: BaseModel, service: BaseServiceImpl):
+        self.model = model
+        self.service = service
 
     @router.get("/")
-    def get_all(self, db: Session):
-        return db.query(self.model).all()
+    def get_all(self):
+        return self.service.get_all()
 
     @router.get("/{id_key}")
-    def get_one(self, db: Session, id_key: int):
-        db_item = db.query(self.model).get(id_key)
-        if db_item is None:
+    def get_one(self, id_key: int):
+        item = self.service.get_one(id_key)
+        if item is None:
             raise HTTPException(status_code=404, detail="Item not found")
-        return db_item
+        return item
 
     @router.post("/")
-    def save(self, db: Session, entity: BaseModel):
-        db.add(entity)
-        db.commit()
-        db.refresh(entity)
-        return entity
+    def save(self, entity: BaseModel):
+        return self.service.save(entity)
 
     @router.put("/{id_key}")
-    def update(self, db: Session, id_key: int, entity: BaseModel):
-        db_item = db.query(self.model).get(id_key)
-        if db_item is None:
+    def update(self, id_key: int, entity: BaseModel):
+        item = self.service.update(id_key, entity)
+        if item is None:
             raise HTTPException(status_code=404, detail="Item not found")
-        for var, value in vars(entity).items():
-            setattr(db_item, var, value) if value else None
-        db.commit()
-        db.refresh(db_item)
-        return db_item
+        return item
 
     @router.delete("/{id_key}")
-    def delete(self, db: Session, id_key: int):
-        db_item = db.query(self.model).get(id_key)
-        if db_item is None:
+    def delete(self, id_key: int):
+        item = self.service.delete(id_key)
+        if item is None:
             raise HTTPException(status_code=404, detail="Item not found")
-        db.delete(db_item)
-        db.commit()
 
     @property
     def router(self):

@@ -1,4 +1,6 @@
 import logging
+from typing import Type
+
 from sqlalchemy.orm import Session
 from repositories.base_repository import BaseRepository
 from models.base_model import BaseModel
@@ -9,9 +11,8 @@ class InstanceNotFoundError(Exception):
 
 
 class BaseRepositoryImpl(BaseRepository):
-    model: BaseModel
-
-    def __init__(self):
+    def __init__(self, model: Type[BaseModel]):
+        self.model = model
         self.logger = logging.getLogger(__name__)
 
     def _get_instance(self, id_key: int):

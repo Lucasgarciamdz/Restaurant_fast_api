@@ -1,4 +1,6 @@
 from abc import ABC, abstractmethod
+
+from models.base_model import BaseModel
 from repositories.base_repository import BaseRepository
 
 
@@ -14,11 +16,11 @@ class BaseService(ABC):
         pass
 
     @abstractmethod
-    def save(self, entity):
+    def save(self, entity: BaseModel):
         pass
 
     @abstractmethod
-    def update(self, id_key: int, entity):
+    def update(self, id_key: int, entity: BaseModel):
         pass
 
     @abstractmethod

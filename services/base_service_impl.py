@@ -3,7 +3,9 @@ from repositories.base_repository_impl import BaseRepositoryImpl
 
 
 class BaseServiceImpl(BaseService):
-    repository: BaseRepositoryImpl
+
+    def __init__(self, repository: BaseRepositoryImpl):
+        self.repository = repository
 
     def get_all(self):
         return self.repository.find_all()

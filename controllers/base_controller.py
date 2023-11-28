@@ -1,11 +1,11 @@
 from abc import ABC, abstractmethod
 from schemas.base_schema import BaseSchema
-
 from services.base_service import BaseService
 
 
 class BaseController(ABC):
     service: BaseService
+    schema: BaseSchema
 
     @abstractmethod
     def get_all(self):
@@ -16,11 +16,11 @@ class BaseController(ABC):
         pass
 
     @abstractmethod
-    def save(self, entity: BaseSchema):
+    def save(self, schema: BaseSchema):
         pass
 
     @abstractmethod
-    def update(self, id_key: int, entity: BaseSchema):
+    def update(self, id_key: int, schema: BaseSchema):
         pass
 
     @abstractmethod

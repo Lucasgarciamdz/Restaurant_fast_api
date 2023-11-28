@@ -1,13 +1,7 @@
-from config.database import engine
+from config.database import Database
 from controllers.base_controller_impl import router
-from models.base_model import BaseModel
 from fastapi import FastAPI
 import uvicorn
-
-
-def create_database():
-    # Create all tables in the database
-    BaseModel.metadata.create_all(bind=engine)
 
 
 def create_fastapi_app():
@@ -26,6 +20,7 @@ def run_app(fastapi_app: FastAPI):
 
 
 if __name__ == "__main__":
-    create_database()
+    db = Database()
+    db.create_tables()
     app = create_fastapi_app()
     run_app(app)

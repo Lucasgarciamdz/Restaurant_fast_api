@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship
 from models.base_model import BaseModel
 
 
-class Client(BaseModel):
+class ClientModel(BaseModel):
     __tablename__ = "clients"
 
     name = Column(String, index=True)

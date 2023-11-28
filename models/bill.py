@@ -8,7 +8,7 @@ class PaymentType(PyEnum):
     CARD = "card"
 
 
-class Bill(BaseModel):
+class BillModel(BaseModel):
     __tablename__ = "bills"
 
     bill_number = Column(String, index=True)

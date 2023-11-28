@@ -17,7 +17,7 @@ class Status(PyEnum):
     CANCELED = 4
 
 
-class Order(BaseModel):
+class OrderModel(BaseModel):
     __tablename__ = "orders"
 
     date = Column(DateTime)
@@ -27,5 +27,5 @@ class Order(BaseModel):
 
     order_details = relationship("OrderDetail", back_populates="order")
 
-    client_id = Column(Integer, ForeignKey("clients.id"))
-    bill_id = Column(Integer, ForeignKey("bills.id"))
+    client_id = Column(Integer, ForeignKey("clients.id_key"))
+    bill_id = Column(Integer, ForeignKey("bills.id_key"))

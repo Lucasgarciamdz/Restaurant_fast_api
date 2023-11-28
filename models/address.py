@@ -10,4 +10,4 @@ class AddressModel(BaseModel):
 
     city = Column(String)
 
-    client_id = Column(Integer, ForeignKey("clients.id"))
+    client_id = Column(Integer, ForeignKey("clients.id_key"))

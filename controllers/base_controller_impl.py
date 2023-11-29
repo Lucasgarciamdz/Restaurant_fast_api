@@ -13,22 +13,22 @@ class BaseControllerImpl(BaseController):
         self.service = service
         self.router = APIRouter()
 
-        @self.router.get("/", response_model=List[BaseSchema])
+        @self.router.get("/", response_model=List[self.schema])
         def get_all():
             return self.get_all()
 
-        @self.router.get("/{id_key}", response_model=BaseSchema)
+        @self.router.get("/{id_key}", response_model=self.schema)
         def get_one(id_key: int):
             item = self.get_one(id_key)
             if item is None:
                 raise HTTPException(status_code=404, detail="Item not found")
             return item
 
-        @self.router.post("/", response_model=BaseSchema)
+        @self.router.post("/", response_model=self.schema)
         def save(schema_in: schema):
             return self.save(schema_in)
 
-        @self.router.put("/{id_key}", response_model=BaseSchema)
+        @self.router.put("/{id_key}", response_model=self.schema)
         def update(id_key: int, schema_in: schema):
             item = self.update(id_key, schema_in)
             if item is None:

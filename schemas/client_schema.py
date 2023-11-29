@@ -1,7 +1,7 @@
-from typing import Optional, List
+from typing import Optional, List, TYPE_CHECKING
 
-from schemas.address_schema import AddressSchema
 from schemas.base_schema import BaseSchema
+from schemas.address_schema import AddressSchema
 from schemas.order_schema import OrderSchema
 
 
@@ -10,5 +10,5 @@ class ClientSchema(BaseSchema):
     lastname: Optional[str] = None
     email: Optional[str] = None
     telephone: Optional[str] = None
-    addresses: List[AddressSchema] = []
-    orders: List[OrderSchema] = []
+    addresses: Optional[List['AddressSchema']] = []
+    orders: Optional[List['OrderSchema']] = []

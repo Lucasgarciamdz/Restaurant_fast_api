@@ -1,5 +1,5 @@
-from base_repository_impl import BaseRepositoryImpl
 from models.address import AddressModel
+from repositories.base_repository_impl import BaseRepositoryImpl
 
 
 class AddressRepository(BaseRepositoryImpl):

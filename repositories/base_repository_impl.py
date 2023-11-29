@@ -11,6 +11,10 @@ class InstanceNotFoundError(Exception):
     pass
 
 
+def _to_dict(instance: BaseModel) -> dict:
+    return {key: value for key, value in instance.__dict__.items() if key in instance.__table__.columns}
+
+
 class BaseRepositoryImpl(BaseRepository):
     def __init__(self, model: Type[BaseModel]):
         db = Database()
@@ -31,39 +35,38 @@ class BaseRepositoryImpl(BaseRepository):
         finally:
             session.close()
 
-    def _get_instance(self, id_key: int):
+    def _get_instance(self, id_key: int) -> dict:
         with self.session_scope() as session:
             instance = session.query(self.model).get(id_key)
         if instance is None:
             self.logger.error(f"No {self.model.__name__} instance found with id {id_key}")
             raise InstanceNotFoundError(f"No {self.model.__name__} instance found with id {id_key}")
-        model_dict = {c.name: getattr(instance, c.name) for c in instance.__table__.columns}
+        model_dict = _to_dict(instance)
         return model_dict
 
     def find_all(self) -> List[dict]:
         with self.session_scope() as session:
             instances = session.query(self.model).all()
-            return [{c.name: getattr(instance, c.name) for c in instance.__table__.columns} for instance in instances]
+            return [_to_dict(instance) for instance in instances]
 
     def find_by_id(self, id_key: int) -> dict:
         return self._get_instance(id_key)
 
-    def save(self, entity: BaseModel) -> dict:
+    def save(self, model: BaseModel) -> dict:
         with self.session_scope() as session:
-            session.add(entity)
+            session.add(model)
             session.commit()
-            session.refresh(entity)
-            model_dict = {c.name: getattr(entity, c.name) for c in entity.__table__.columns}
+            session.refresh(model)
+            model_dict = _to_dict(model)
         return model_dict
 
-    def update(self, id_key: int, entity: BaseModel) -> dict:
+    def update(self, id_key: int, model: BaseModel) -> dict:
         with self.session_scope() as session:
             instance = self._get_instance(id_key)
-            instance.__dict__.update(entity.__dict__)
+            instance.update(model.__dict__)
             session.merge(instance)
             session.commit()
-            model_dict = {c.name: getattr(instance, c.name) for c in instance.__table__.columns}
-        return model_dict
+        return instance
 
     def delete(self, id_key: int) -> None:
         with self.session_scope() as session:

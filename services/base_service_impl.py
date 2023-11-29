@@ -38,7 +38,3 @@ class BaseServiceImpl(BaseService):
         model_class = type(self.model) if not callable(self.model) else self.model
         model_instance = model_class(**schema.model_dump())
         return model_instance
-
-    def to_schema(self, model: BaseModel) -> BaseSchema:
-        model_dict = {c.name: getattr(model, c.name) for c in model.__table__.columns}
-        return self.schema(**model_dict)

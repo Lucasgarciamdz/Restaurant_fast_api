@@ -33,7 +33,3 @@ class BaseService(ABC):
     @abstractmethod
     def to_model(self, schema: BaseSchema) -> BaseModel:
         pass
-
-    @abstractmethod
-    def to_schema(self, model: BaseModel) -> BaseSchema:
-        pass

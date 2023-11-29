@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Type
+from typing import Type, List
 
 from schemas.base_schema import BaseSchema
 from services.base_service import BaseService
@@ -10,21 +10,21 @@ class BaseController(ABC):
     schema: Type[BaseSchema]
 
     @abstractmethod
-    def get_all(self):
+    def get_all(self) -> List[BaseSchema]:
         pass
 
     @abstractmethod
-    def get_one(self, id_key: int):
+    def get_one(self, id_key: int) -> BaseSchema:
         pass
 
     @abstractmethod
-    def save(self, schema: BaseSchema):
+    def save(self, schema: BaseSchema) -> BaseSchema:
         pass
 
     @abstractmethod
-    def update(self, id_key: int, schema: BaseSchema):
+    def update(self, id_key: int, schema: BaseSchema) -> BaseSchema:
         pass
 
     @abstractmethod
-    def delete(self, id_key: int):
+    def delete(self, id_key: int) -> None:
         pass

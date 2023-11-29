@@ -1,5 +1,6 @@
 from sqlalchemy import Column, String, Float, Integer, ForeignKey
 from sqlalchemy.orm import relationship
+
 from models.base_model import BaseModel
 
 
@@ -10,4 +11,4 @@ class ReviewModel(BaseModel):
     comment = Column(String)
     product_id = Column(Integer, ForeignKey("products.id_key"))
 
-    product = relationship("Product", back_populates="reviews")
+    product = relationship("ProductModel", back_populates="reviews")

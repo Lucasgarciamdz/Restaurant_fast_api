@@ -1,7 +1,7 @@
 from models.address import AddressModel
+from repositories.address_repository import AddressRepository
 from schemas.address_schema import AddressSchema
 from services.base_service_impl import BaseServiceImpl
-from repositories.address_repository import AddressRepository
 
 
 class AddressService(BaseServiceImpl):

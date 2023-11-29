@@ -1,6 +1,9 @@
-from sqlalchemy import Column, String, Float, Date, Enum
-from models.base_model import BaseModel
 from enum import Enum as PyEnum
+
+from sqlalchemy import Column, String, Float, Date, Enum
+from sqlalchemy.orm import relationship
+
+from models.base_model import BaseModel
 
 
 class PaymentType(PyEnum):
@@ -16,3 +19,4 @@ class BillModel(BaseModel):
     date = Column(Date)
     total = Column(Float)
     payment_type = Column(Enum(PaymentType))
+    order = relationship('OrderModel', back_populates='bill')

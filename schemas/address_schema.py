@@ -1,9 +1,10 @@
-from schemas.base_schema import BaseSchema
 from typing import Optional
+
+from schemas.base_schema import BaseSchema
 
 
 class AddressSchema(BaseSchema):
-    street: str
-    number: str
-    city: str
-    client_id: Optional[int] = None
+    street: Optional[str] = None
+    number: Optional[str] = None
+    city: Optional[str] = None
+    client_id: int

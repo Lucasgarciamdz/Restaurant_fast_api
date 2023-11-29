@@ -7,7 +7,7 @@ from schemas.base_schema import BaseSchema
 
 
 class BaseService(ABC):
-    repository: Type[BaseRepository]
+    repository: BaseRepository
     schema: Type[BaseSchema]
 
     @abstractmethod

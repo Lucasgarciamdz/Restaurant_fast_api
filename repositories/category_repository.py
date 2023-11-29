@@ -1,5 +1,5 @@
-from repositories.base_repository_impl import BaseRepositoryImpl
 from models.category import Category
+from repositories.base_repository_impl import BaseRepositoryImpl
 
 
 class CategoryRepository(BaseRepositoryImpl):

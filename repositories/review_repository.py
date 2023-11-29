@@ -1,5 +1,5 @@
-from repositories.base_repository_impl import BaseRepositoryImpl
 from models.review import Review
+from repositories.base_repository_impl import BaseRepositoryImpl
 
 
 class ReviewRepository(BaseRepositoryImpl):

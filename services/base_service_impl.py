@@ -1,9 +1,9 @@
 from typing import Type, List
 
 from models.base_model import BaseModel
+from repositories.base_repository_impl import BaseRepositoryImpl
 from schemas.base_schema import BaseSchema
 from services.base_service import BaseService
-from repositories.base_repository_impl import BaseRepositoryImpl
 
 
 class BaseServiceImpl(BaseService):
@@ -14,22 +14,22 @@ class BaseServiceImpl(BaseService):
         self.schema = schema
 
     def get_all(self) -> List[BaseSchema]:
-        models = self.repository.find_all()
-        return [self.to_schema(model) for model in models]
+        model_dicts = self.repository.find_all()
+        return [self.schema(**model_dict) for model_dict in model_dicts]
 
     def get_one(self, id_key: int) -> BaseSchema:
-        model = self.repository.find_by_id(id_key)
-        return self.to_schema(model)
+        model_dict = self.repository.find_by_id(id_key)
+        return self.schema(**model_dict)
 
     def save(self, schema: BaseSchema) -> BaseSchema:
         model = self.to_model(schema)
-        saved_model = self.repository.save(model)
-        return self.to_schema(saved_model)
+        model_dict = self.repository.save(model)
+        return self.schema(**model_dict)
 
     def update(self, id_key: int, schema: BaseSchema) -> BaseSchema:
         model = self.to_model(schema)
-        updated_model = self.repository.update(id_key, model)
-        return self.to_schema(updated_model)
+        model_dict = self.repository.update(id_key, model)
+        return self.schema(**model_dict)
 
     def delete(self, id_key: int) -> None:
         self.repository.delete(id_key)
@@ -40,4 +40,5 @@ class BaseServiceImpl(BaseService):
         return model_instance
 
     def to_schema(self, model: BaseModel) -> BaseSchema:
-        return self.schema(**model.__dict__)
+        model_dict = {c.name: getattr(model, c.name) for c in model.__table__.columns}
+        return self.schema(**model_dict)

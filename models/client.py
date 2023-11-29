@@ -1,5 +1,6 @@
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
+
 from models.base_model import BaseModel
 
 
@@ -11,5 +12,5 @@ class ClientModel(BaseModel):
     email = Column(String)
     telephone = Column(String)
 
-    addresses = relationship("Address", back_populates="client")
-    orders = relationship("Order", back_populates="client")
+    addresses = relationship("AddressModel", back_populates="client")
+    orders = relationship("OrderModel", back_populates="client")

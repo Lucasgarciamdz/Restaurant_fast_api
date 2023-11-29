@@ -1,11 +1,13 @@
 from abc import ABC, abstractmethod
+from typing import Type
+
 from schemas.base_schema import BaseSchema
 from services.base_service import BaseService
 
 
 class BaseController(ABC):
     service: BaseService
-    schema: BaseSchema
+    schema: Type[BaseSchema]
 
     @abstractmethod
     def get_all(self):

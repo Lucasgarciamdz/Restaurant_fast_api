@@ -1,5 +1,5 @@
-from repositories.base_repository_impl import BaseRepositoryImpl
 from models.bill import Bill
+from repositories.base_repository_impl import BaseRepositoryImpl
 
 
 class BillRepository(BaseRepositoryImpl):

@@ -1,5 +1,5 @@
-from .base_model import BaseModel
 from .address import AddressModel
+from .base_model import BaseModel
 from .bill import BillModel
 from .category import CategoryModel
 from .client import ClientModel

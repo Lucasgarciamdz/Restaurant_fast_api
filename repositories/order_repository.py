@@ -1,5 +1,5 @@
-from repositories.base_repository_impl import BaseRepositoryImpl
 from models.order import Order
+from repositories.base_repository_impl import BaseRepositoryImpl
 
 
 class OrderRepository(BaseRepositoryImpl):

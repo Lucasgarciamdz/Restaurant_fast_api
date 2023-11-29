@@ -1,5 +1,5 @@
-from services.address_service import AddressService
 from base_controller_impl import BaseControllerImpl
+from services.address_service import AddressService
 
 
 class AddressController(BaseControllerImpl):

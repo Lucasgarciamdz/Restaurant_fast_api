@@ -1,16 +1,15 @@
-from config.database import Database
-from controllers.base_controller_impl import router
-from fastapi import FastAPI
 import uvicorn
+from fastapi import FastAPI
+
+from config.database import Database
+from controllers.client_controller import ClientController
 
 
 def create_fastapi_app():
-    # Create FastAPI instance
     fastapi_app = FastAPI()
 
-    # Include your routers
-    fastapi_app.include_router(router)
-    # Add other routers here
+    client_controller = ClientController()
+    fastapi_app.include_router(client_controller.router, prefix="/clients")
 
     return fastapi_app
 

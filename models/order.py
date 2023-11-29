@@ -1,7 +1,9 @@
+from enum import Enum as PyEnum
+
 from sqlalchemy import Column, Float, DateTime, Enum, Integer, ForeignKey
 from sqlalchemy.orm import relationship
+
 from models.base_model import BaseModel
-from enum import Enum as PyEnum
 
 
 class DeliveryMethod(PyEnum):
@@ -24,8 +26,9 @@ class OrderModel(BaseModel):
     total = Column(Float)
     delivery_method = Column(Enum(DeliveryMethod))
     status = Column(Enum(Status))
+    client_id = Column(Integer, ForeignKey('clients.id_key'))
+    bill_id = Column(Integer, ForeignKey('bills.id_key'))
 
-    order_details = relationship("OrderDetail", back_populates="order")
-
-    client_id = Column(Integer, ForeignKey("clients.id_key"))
-    bill_id = Column(Integer, ForeignKey("bills.id_key"))
+    order_details = relationship("OrderDetailModel", back_populates="order")
+    client = relationship("ClientModel", back_populates="orders")
+    bill = relationship("BillModel", back_populates="order")

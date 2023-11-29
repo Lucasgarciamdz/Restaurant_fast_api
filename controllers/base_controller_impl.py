@@ -1,43 +1,55 @@
-from fastapi import APIRouter, HTTPException, Depends
 from typing import Type, List
-from schemas.base_schema import BaseSchema
-from controllers.base_controller import BaseController
-from services.base_service_impl import BaseServiceImpl
 
-router = APIRouter()
+from fastapi import APIRouter, HTTPException
+
+from controllers.base_controller import BaseController
+from schemas.base_schema import BaseSchema
+from services.base_service_impl import BaseServiceImpl
 
 
 class BaseControllerImpl(BaseController):
     def __init__(self, schema: Type[BaseSchema], service: BaseServiceImpl):
         self.schema = schema
         self.service = service
+        self.router = APIRouter()
 
-    @router.get("/", response_model=List[BaseSchema])
-    def get_all(self) -> List[BaseSchema]:
+        @self.router.get("/", response_model=List[BaseSchema])
+        def get_all():
+            return self.get_all()
+
+        @self.router.get("/{id_key}", response_model=BaseSchema)
+        def get_one(id_key: int):
+            item = self.get_one(id_key)
+            if item is None:
+                raise HTTPException(status_code=404, detail="Item not found")
+            return item
+
+        @self.router.post("/", response_model=BaseSchema)
+        def save(schema_in: schema):
+            return self.save(schema_in)
+
+        @self.router.put("/{id_key}", response_model=BaseSchema)
+        def update(id_key: int, schema_in: schema):
+            item = self.update(id_key, schema_in)
+            if item is None:
+                raise HTTPException(status_code=404, detail="Item not found")
+            return item
+
+        @self.router.delete("/{id_key}")
+        def delete(id_key: int):
+            self.delete(id_key)
+
+    def get_all(self):
         return self.service.get_all()
 
-    @router.get("/{id_key}", response_model=BaseSchema)
-    def get_one(self, id_key: int) -> BaseSchema:
-        item = self.service.get_one(id_key)
-        if item is None:
-            raise HTTPException(status_code=404, detail="Item not found")
-        return item
+    def get_one(self, id_key: int):
+        return self.service.get_one(id_key)
 
-    @router.post("/", response_model=BaseSchema)
-    def save(self, schema: BaseSchema = Depends(BaseSchema)) -> BaseSchema:
+    def save(self, schema: BaseSchema):
         return self.service.save(schema)
 
-    @router.put("/{id_key}", response_model=BaseSchema)
-    def update(self, id_key: int, schema: BaseSchema = Depends(BaseSchema)) -> BaseSchema:
-        item = self.service.update(id_key, schema)
-        if item is None:
-            raise HTTPException(status_code=404, detail="Item not found")
-        return item
+    def update(self, id_key: int, schema: BaseSchema):
+        return self.service.update(id_key, schema)
 
-    @router.delete("/{id_key}")
-    def delete(self, id_key: int) -> None:
+    def delete(self, id_key: int):
         self.service.delete(id_key)
-
-    @property
-    def router(self):
-        return router

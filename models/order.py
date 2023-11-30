@@ -29,6 +29,7 @@ class OrderModel(BaseModel):
     client_id = Column(Integer, ForeignKey('clients.id_key'))
     bill_id = Column(Integer, ForeignKey('bills.id_key'))
 
-    order_details = relationship("OrderDetailModel", back_populates="order")
-    client = relationship("ClientModel", back_populates="orders")
-    bill = relationship("BillModel", back_populates="order")
+    order_details = relationship("OrderDetailModel", back_populates="order", cascade="all, delete-orphan",
+                                 lazy="joined")
+    client = relationship("ClientModel", back_populates="orders", lazy="joined")
+    bill = relationship("BillModel", back_populates="order", lazy="joined")

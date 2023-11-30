@@ -46,6 +46,13 @@ class Database:
             self._session = self._SessionLocal()
         return self._session
 
+    def drop_database(self):
+        try:
+            Base.metadata.drop_all(self._engine)
+            print("Tables dropped.")
+        except Exception as e:
+            print(f"Error dropping tables: {e}")
+
     def create_tables(self):
         try:
             Base.metadata.create_all(self._engine)

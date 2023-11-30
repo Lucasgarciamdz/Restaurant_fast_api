@@ -1,8 +1,10 @@
 from typing import Optional, TYPE_CHECKING
 
 from schemas.base_schema import BaseSchema
-from schemas.order_schema import OrderSchema
-from schemas.product_schema import ProductSchema
+
+if TYPE_CHECKING:
+    from schemas.order_schema import OrderSchema
+    from schemas.product_schema import ProductSchema
 
 
 class OrderDetailSchema(BaseSchema):

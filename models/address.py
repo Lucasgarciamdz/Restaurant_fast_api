@@ -11,4 +11,4 @@ class AddressModel(BaseModel):
     number = Column(String)
     city = Column(String)
     client_id = Column(Integer, ForeignKey('clients.id_key'))
-    client = relationship('ClientModel', back_populates='addresses')
+    client = relationship('ClientModel', back_populates='addresses', lazy="joined")

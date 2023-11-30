@@ -14,17 +14,13 @@ class BaseServiceImpl(BaseService):
         self.schema = schema
 
     def get_all(self) -> List[BaseSchema]:
-        model_dicts = self.repository.find_all()
-        return [self.schema(**model_dict) for model_dict in model_dicts]
+        return self.repository.find_all()
 
     def get_one(self, id_key: int) -> BaseSchema:
-        model_dict = self.repository.find_by_id(id_key)
-        return self.schema(**model_dict)
+        return self.repository.find_by_id(id_key)
 
     def save(self, schema: BaseSchema) -> BaseSchema:
-        model = self.to_model(schema)
-        model_dict = self.repository.save(model)
-        return self.schema(**model_dict)
+        return self.repository.save(self.to_model(schema))
 
     def update(self, id_key: int, schema: BaseSchema) -> BaseSchema:
         model = self.to_model(schema)

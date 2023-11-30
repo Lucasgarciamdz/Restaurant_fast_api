@@ -19,4 +19,4 @@ class BillModel(BaseModel):
     date = Column(Date)
     total = Column(Float)
     payment_type = Column(Enum(PaymentType))
-    order = relationship('OrderModel', back_populates='bill')
+    order = relationship('OrderModel', back_populates='bill', uselist=False, lazy="joined")

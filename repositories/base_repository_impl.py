@@ -5,6 +5,7 @@ from typing import Type, List
 from config.database import Database
 from models.base_model import BaseModel
 from repositories.base_repository import BaseRepository
+from schemas.base_schema import BaseSchema
 
 
 class InstanceNotFoundError(Exception):
@@ -16,10 +17,11 @@ def _to_dict(instance: BaseModel) -> dict:
 
 
 class BaseRepositoryImpl(BaseRepository):
-    def __init__(self, model: Type[BaseModel]):
+    def __init__(self, model: Type[BaseModel], schema: Type[BaseSchema]):
         db = Database()
         self.session = db.get_session()
         self.model = model
+        self.schema = schema
         self.logger = logging.getLogger(__name__)
 
     @contextmanager
@@ -35,30 +37,35 @@ class BaseRepositoryImpl(BaseRepository):
         finally:
             session.close()
 
-    def _get_instance(self, id_key: int) -> dict:
+    def _get_instance(self, id_key: int) -> BaseSchema:
         with self.session_scope() as session:
             instance = session.query(self.model).get(id_key)
+            if instance:
+                schema = self.schema.model_validate(instance)
         if instance is None:
             self.logger.error(f"No {self.model.__name__} instance found with id {id_key}")
             raise InstanceNotFoundError(f"No {self.model.__name__} instance found with id {id_key}")
-        model_dict = _to_dict(instance)
-        return model_dict
+        return schema
 
-    def find_all(self) -> List[dict]:
+    def find_all(self) -> List[BaseSchema]:
         with self.session_scope() as session:
             instances = session.query(self.model).all()
-            return [_to_dict(instance) for instance in instances]
+            if instances:
+                schemas = [self.schema.model_validate(instance) for instance in instances]
 
-    def find_by_id(self, id_key: int) -> dict:
+        return schemas
+
+    def find_by_id(self, id_key: int) -> BaseSchema:
+
         return self._get_instance(id_key)
 
-    def save(self, model: BaseModel) -> dict:
+    def save(self, model: BaseModel) -> BaseSchema:
         with self.session_scope() as session:
             session.add(model)
             session.commit()
             session.refresh(model)
-            model_dict = _to_dict(model)
-        return model_dict
+            schema = self.schema.model_validate(model)
+        return schema
 
     def update(self, id_key: int, model: BaseModel) -> dict:
         with self.session_scope() as session:
@@ -70,6 +77,6 @@ class BaseRepositoryImpl(BaseRepository):
 
     def delete(self, id_key: int) -> None:
         with self.session_scope() as session:
-            instance = self._get_instance(id_key)
+            instance = session.query(self.model).get(id_key)
             session.delete(instance)
             session.commit()

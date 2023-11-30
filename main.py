@@ -1,5 +1,7 @@
 import uvicorn
 from fastapi import FastAPI
+from starlette import status
+from starlette.responses import JSONResponse
 
 from config.database import Database
 from controllers.address_controller import AddressController
@@ -10,10 +12,18 @@ from controllers.order_controller import OrderController
 from controllers.order_detail_controller import OrderDetailController
 from controllers.product_controller import ProductController
 from controllers.review_controller import ReviewController
+from repositories.base_repository_impl import InstanceNotFoundError
 
 
 def create_fastapi_app():
     fastapi_app = FastAPI()
+
+    @fastapi_app.exception_handler(InstanceNotFoundError)
+    async def instance_not_found_exception_handler(request, exc):
+        return JSONResponse(
+            status_code=status.HTTP_404_NOT_FOUND,
+            content={"message": str(exc)},
+        )
 
     client_controller = ClientController()
     fastapi_app.include_router(client_controller.router, prefix="/clients")

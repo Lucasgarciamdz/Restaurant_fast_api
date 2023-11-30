@@ -1,8 +1,10 @@
 from typing import Optional, List, TYPE_CHECKING
 
 from schemas.base_schema import BaseSchema
-from schemas.address_schema import AddressSchema
-from schemas.order_schema import OrderSchema
+
+if TYPE_CHECKING:
+    from schemas.address_schema import AddressSchema
+    from schemas.order_schema import OrderSchema
 
 
 class ClientSchema(BaseSchema):

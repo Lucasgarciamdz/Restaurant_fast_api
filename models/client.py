@@ -12,5 +12,5 @@ class ClientModel(BaseModel):
     email = Column(String)
     telephone = Column(String)
 
-    addresses = relationship("AddressModel", back_populates="client")
-    orders = relationship("OrderModel", back_populates="client")
+    addresses = relationship("AddressModel", back_populates="client", cascade="all, delete-orphan", lazy="joined")
+    orders = relationship("OrderModel", back_populates="client", cascade="all, delete-orphan", lazy="joined")

@@ -12,5 +12,5 @@ class OrderDetailModel(BaseModel):
     order_id = Column(INT, ForeignKey("orders.id_key"))
     product_id = Column(Integer, ForeignKey("products.id_key"))
 
-    order = relationship("OrderModel", back_populates="order_details")
-    product = relationship("ProductModel", back_populates="order_details")
+    order = relationship("OrderModel", back_populates="order_details", lazy="joined")
+    product = relationship("ProductModel", back_populates="order_details", lazy="joined")

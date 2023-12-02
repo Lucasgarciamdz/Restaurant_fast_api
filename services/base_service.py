@@ -33,3 +33,7 @@ class BaseService(ABC):
     @abstractmethod
     def to_model(self, schema: BaseSchema) -> BaseModel:
         pass
+
+    @abstractmethod
+    def get_repository(self, repo_name: str):
+        pass

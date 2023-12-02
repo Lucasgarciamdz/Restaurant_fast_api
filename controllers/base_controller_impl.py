@@ -1,9 +1,8 @@
 from typing import Type, List
-
 from fastapi import APIRouter, HTTPException
-
 from controllers.base_controller import BaseController
 from schemas.base_schema import BaseSchema
+from schemas.nested_schemas import NestedSchema
 from services.base_service_impl import BaseServiceImpl
 
 
@@ -24,8 +23,8 @@ class BaseControllerImpl(BaseController):
                 raise HTTPException(status_code=404, detail="Item not found")
             return item
 
-        @self.router.post("/", response_model=self.schema)
-        def save(schema_in: schema):
+        @self.router.post("/", response_model=NestedSchema)
+        def save(schema_in: NestedSchema):
             return self.save(schema_in)
 
         @self.router.put("/{id_key}", response_model=self.schema)
@@ -45,7 +44,7 @@ class BaseControllerImpl(BaseController):
     def get_one(self, id_key: int):
         return self.service.get_one(id_key)
 
-    def save(self, schema: BaseSchema):
+    def save(self, schema: NestedSchema):
         return self.service.save(schema)
 
     def update(self, id_key: int, schema: BaseSchema):

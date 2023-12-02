@@ -1,7 +1,7 @@
 import os
 
 from dotenv import load_dotenv
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, Session
 
 from models.address import AddressModel  # noqa
@@ -28,7 +28,7 @@ DATABASE_URI = f'postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST
 
 class Database:
     _instance = None
-    engine = create_engine(DATABASE_URI, echo=True)
+    engine = create_engine(DATABASE_URI)
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
     def __init__(self):
@@ -64,3 +64,13 @@ class Database:
         if hasattr(self, "_session"):
             self._session.close()
             del self._session
+
+    def check_connection(self):
+        try:
+            with self._engine.connect() as connection:
+                connection.execute(text("SELECT 1"))
+            print("Connection established.")
+            return True
+        except Exception as e:
+            print(f"Error connecting to database: {e}")
+            return False

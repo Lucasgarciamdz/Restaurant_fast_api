@@ -1,6 +1,6 @@
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class BaseSchema(BaseModel):
@@ -8,4 +8,4 @@ class BaseSchema(BaseModel):
         from_attributes = True
         arbitrary_types_allowed = True
 
-    id_key: Optional[int] = None
+    id_key: Optional[int] = Field(alias='id')

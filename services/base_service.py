@@ -1,39 +1,59 @@
+"""
+Module for Base Service
+"""
+
 from abc import ABC, abstractmethod
-from typing import Type, List
+from typing import List
 
 from models.base_model import BaseModel
-from repositories.base_repository import BaseRepository
 from schemas.base_schema import BaseSchema
+from repositories.base_repository import BaseRepository
 
 
 class BaseService(ABC):
-    repository: BaseRepository
-    schema: Type[BaseSchema]
+    """Base Service"""
+
+    @property
+    @abstractmethod
+    def repository(self) -> BaseRepository:
+        """
+        Repository to access database
+        """
+
+    @property
+    @abstractmethod
+    def schema(self) -> BaseSchema:
+        """
+        Pydantic Schema to validate data
+        """
+
+    @property
+    @abstractmethod
+    def model(self) -> BaseModel:
+        """
+        SQLAlchemy Model
+        """
 
     @abstractmethod
     def get_all(self) -> List[BaseSchema]:
-        pass
+        """Get all"""
 
     @abstractmethod
     def get_one(self, id_key: int) -> BaseSchema:
-        pass
+        """Get by id"""
 
     @abstractmethod
     def save(self, schema: BaseSchema) -> BaseSchema:
-        pass
+        """Save"""
 
     @abstractmethod
     def update(self, id_key: int, schema: BaseSchema) -> BaseSchema:
-        pass
+        """Update"""
 
     @abstractmethod
     def delete(self, id_key: int) -> None:
-        pass
+        """Delete"""
 
     @abstractmethod
     def to_model(self, schema: BaseSchema) -> BaseModel:
-        pass
-
-    @abstractmethod
-    def get_repository(self, repo_name: str):
-        pass
+        """To model"""

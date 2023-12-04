@@ -1,62 +1,71 @@
-from typing import Type, List
-
+"""
+Module for Base Service Implementation
+"""
+from typing import List, Type
 from models.base_model import BaseModel
-from repositories.address_repository import AddressRepository
-from repositories.base_repository_impl import BaseRepositoryImpl
-from repositories.bill_repository import BillRepository
-from repositories.category_repository import CategoryRepository
-from repositories.client_repository import ClientRepository
-from repositories.order_detail_repository import OrderDetailRepository
-from repositories.order_repository import OrderRepository
-from repositories.product_repository import ProductRepository
-from repositories.review_repository import ReviewRepository
-from schemas.base_schema import BaseSchema
-from schemas.nested_schemas import NestedSchema
 from services.base_service import BaseService
+from repositories.base_repository import BaseRepository
+from schemas.base_schema import BaseSchema
 
 
 class BaseServiceImpl(BaseService):
-
-    def __init__(self, repository: BaseRepositoryImpl, model: Type[BaseModel], schema: Type[BaseSchema]):
+    """ Base Service Implementation"""
+    def __init__(self, repository: BaseRepository,
+                 model: Type[BaseModel],
+                 schema: Type[BaseSchema]):
         self.repository = repository
         self.model = model
         self.schema = schema
 
+    @property
+    def repository(self) -> BaseRepository:
+        """Repository to access database"""
+        return self._repository
+
+    @property
+    def schema(self) -> BaseSchema:
+        """Pydantic Schema to validate data"""
+        return self._schema
+
+    @property
+    def model(self) -> BaseModel:
+        """SQLAlchemy Model"""
+        return self._model
+
     def get_all(self) -> List[BaseSchema]:
+        """Get all data"""
         return self.repository.find_all()
 
     def get_one(self, id_key: int) -> BaseSchema:
-        return self.repository.find_by_id(id_key)
+        """Get one data"""
+        return self.repository.find(id_key)
 
-    def save(self, schema: NestedSchema) -> NestedSchema:
-        saved_schemas = {}
-        for repo_name, sub_schema in schema.schemas.items():
-            repository = self.get_repository(repo_name)
-            saved_schemas[repo_name] = repository.save(self.to_model(sub_schema))
-        return NestedSchema(schemas=saved_schemas)
+    def save(self, schema: BaseSchema) -> BaseSchema:
+        """Save data"""
+        return self.repository.save(self.to_model(schema))
 
     def update(self, id_key: int, schema: BaseSchema) -> BaseSchema:
+        """Update data"""
         model = self.to_model(schema)
-        model_dict = self.repository.update(id_key, model)
-        return self.schema(**model_dict)
+        return self.repository.update(id_key, model)
 
     def delete(self, id_key: int) -> None:
-        self.repository.delete(id_key)
+        """Delete data"""
+        self.repository.remove(id_key)
 
     def to_model(self, schema: BaseSchema) -> BaseModel:
         model_class = type(self.model) if not callable(self.model) else self.model
         model_instance = model_class(**schema.model_dump())
         return model_instance
 
-    def get_repository(self, repo_name: str):
-        repositories = {
-            'client': ClientRepository(),
-            'address': AddressRepository(),
-            'bill': BillRepository(),
-            'category': CategoryRepository(),
-            'product': ProductRepository(),
-            'order': OrderRepository(),
-            'order_detail': OrderDetailRepository(),
-            'review': ReviewRepository(),
-        }
-        return repositories.get(repo_name)
+    @repository.setter
+    def repository(self, value):
+        self._repository = value
+
+    @model.setter
+    def model(self, value):
+        self._model = value
+
+    @schema.setter
+    def schema(self, value):
+        self._schema = value

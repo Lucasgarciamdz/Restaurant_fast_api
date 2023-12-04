@@ -1,29 +1,83 @@
-from abc import ABC, abstractmethod
-from typing import Type, List
+"""
+BaseRepository is an abstract class that defines the methods
+"""
+from abc import abstractmethod, ABC
+from typing import List, Type
+from sqlalchemy.orm import Session
 
-from models.base_model import BaseModel
+from models import BaseModel
 from schemas.base_schema import BaseSchema
 
 
 class BaseRepository(ABC):
-    model: Type[BaseModel]
+    """
+    BaseRepository is an abstract class that defines the methods
+    that must be implemented by the repositories.
+    """
+    @property
+    @abstractmethod
+    def session(self) -> Session:
+        """
+        SQLAlchemy session
+        """
+
+    @property
+    @abstractmethod
+    def model(self) -> Type[BaseModel]:
+        """
+        SQLAlchemy model
+        """
+
+    @property
+    @abstractmethod
+    def schema(self) -> Type[BaseSchema]:
+        """
+        Pydantic schema
+        """
+
+    @abstractmethod
+    def find(self, id_key: int) -> BaseSchema:
+        """
+        Find a record by id_key
+        :param id_key: int
+        :return: BaseSchema
+        """
 
     @abstractmethod
     def find_all(self) -> List[BaseSchema]:
-        pass
-
-    @abstractmethod
-    def find_by_id(self, id_key: int) -> BaseSchema:
-        pass
+        """
+        Find all records
+        :return: List[BaseSchema]
+        """
 
     @abstractmethod
     def save(self, model: BaseModel) -> BaseSchema:
-        pass
+        """
+        Save a record
+        :param model: BaseModel
+        :return: BaseSchema
+        """
 
     @abstractmethod
     def update(self, id_key: int, model: BaseModel) -> BaseSchema:
-        pass
+        """
+        Update a record
+        :param id_key: int
+        :param model: BaseModel
+        :return: BaseSchema
+        """
 
     @abstractmethod
-    def delete(self, id_key: int) -> None:
-        pass
+    def remove(self, id_key: int) -> None:
+        """
+        Delete a record by id_key
+        :param id_key: int
+        """
+
+    @abstractmethod
+    def save_all(self, models: List[BaseModel]) -> List[BaseSchema]:
+        """
+        Save multiple records
+        :param models: List[BaseModel]
+        :return: List[BaseSchema]
+        """

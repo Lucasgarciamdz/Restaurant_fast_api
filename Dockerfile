@@ -7,8 +7,7 @@ WORKDIR /app
 # Copy the requirements file into the container
 COPY requirements.txt .
 
-RUN apt-get update && apt-get install -y curl \
-    && pip install --no-cache-dir --user -r requirements.txt
+RUN pip install --no-cache-dir --user -r requirements.txt
 
 # Start a new stage to create a smaller image
 FROM python:3.11.6-slim-bullseye

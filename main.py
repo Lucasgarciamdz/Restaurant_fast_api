@@ -14,6 +14,7 @@ from controllers.product_controller import ProductController
 from controllers.review_controller import ReviewController
 from controllers.health_check import router as health_check_controller
 from repositories.base_repository_impl import InstanceNotFoundError
+from controllers.health_check import router as health_check_controller
 
 
 def create_fastapi_app():

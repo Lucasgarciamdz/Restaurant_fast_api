@@ -1,11 +1,11 @@
 import os
 
 from dotenv import load_dotenv
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, Session
 
 from models.address import AddressModel  # noqa
-from models.base_model import Base
+from models.base_model import base
 from models.bill import BillModel  # noqa
 from models.category import CategoryModel  # noqa
 from models.client import ClientModel  # noqa
@@ -48,14 +48,14 @@ class Database:
 
     def drop_database(self):
         try:
-            Base.metadata.drop_all(self._engine)
+            base.metadata.drop_all(self._engine)
             print("Tables dropped.")
         except Exception as e:
             print(f"Error dropping tables: {e}")
 
     def create_tables(self):
         try:
-            Base.metadata.create_all(self._engine)
+            base.metadata.create_all(self._engine)
             print("Tables created.")
         except Exception as e:
             print(f"Error creating tables: {e}")
@@ -64,3 +64,13 @@ class Database:
         if hasattr(self, "_session"):
             self._session.close()
             del self._session
+
+    def check_connection(self):
+        try:
+            with self._engine.connect() as connection:
+                connection.execute(text("SELECT 1"))
+            print("Connection established.")
+            return True
+        except Exception as e:
+            print(f"Error connecting to database: {e}")
+            return False

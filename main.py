@@ -13,6 +13,7 @@ from controllers.order_detail_controller import OrderDetailController
 from controllers.product_controller import ProductController
 from controllers.review_controller import ReviewController
 from repositories.base_repository_impl import InstanceNotFoundError
+from controllers.health_check import router as health_check_controller
 
 
 def create_fastapi_app():
@@ -48,6 +49,8 @@ def create_fastapi_app():
 
     category_controller = CategoryController()
     fastapi_app.include_router(category_controller.router, prefix="/categories")
+
+    fastapi_app.include_router(health_check_controller, prefix="/health_check")
 
     return fastapi_app
 

@@ -1,0 +1,10 @@
+fast_api_venv/*
+.idea/*
+.mypy_cache/*
+.pytype/*
+.vscode/*
+__pycache__/*
+.env
+.trunk/*
+*.pyc
+git_logs.txt

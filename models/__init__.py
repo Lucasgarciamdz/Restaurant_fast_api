@@ -1,9 +1,9 @@
-from .address import AddressModel
-from .base_model import BaseModel
-from .bill import BillModel
-from .category import CategoryModel
-from .client import ClientModel
-from .order import OrderModel
-from .order_detail import OrderDetailModel
-from .product import ProductModel
-from .review import ReviewModel
+"""
+This is the __init__.py file for the models package.
+
+It imports all the models for easier access.
+"""
+
+# If these models are used in other files via this package,
+# you can ignore the 'unused import' warning.
+# Otherwise, remove the unused imports.

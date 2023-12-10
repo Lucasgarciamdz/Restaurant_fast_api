@@ -1,6 +1,6 @@
 """Base controller implementation module."""
 from typing import Type, List
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException
 from controllers.base_controller import BaseController
 from schemas.base_schema import BaseSchema
 from services.base_service import BaseService

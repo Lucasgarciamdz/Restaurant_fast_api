@@ -3,6 +3,7 @@ BaseRepository implementation
 """
 import logging
 from contextlib import contextmanager
+import pdb
 from typing import Type, List
 from sqlalchemy.orm import Session
 
@@ -75,17 +76,21 @@ class BaseRepositoryImpl(BaseRepository):
             session.add(model)
             return self.schema.model_validate(model)
 
-    def update(self, id_key: int, model: BaseModel) -> dict:
+    def update(self, id_key: int, changes: dict) -> BaseSchema:
         with self.session_scope() as session:
-            instance = session.query(self.model).get(id_key)
+            # Filter the instance with the given id_key
+            instance = session.query(self.model).filter(self.model.id_key == id_key).first()
             if instance is None:
                 raise InstanceNotFoundError(f"No instance found with id {id_key}")
-            for key, value in model.__dict__.items():
-                if hasattr(instance, key):
+            # Update the instance with the new data
+            for key, value in changes.items():
+                if key in instance.__dict__ and value is not None:
                     setattr(instance, key, value)
-            session.merge(instance)
             session.commit()
-        return instance
+            # Retrieve the updated instance
+            # Validate the updated instance with the schema
+            schema = self.schema.model_validate(instance)
+        return schema
 
     def remove(self, id_key: int) -> None:
         with self.session_scope() as session:

@@ -80,7 +80,9 @@ class BaseRepositoryImpl(BaseRepository):
             instance = session.query(self.model).get(id_key)
             if instance is None:
                 raise InstanceNotFoundError(f"No instance found with id {id_key}")
-            instance.update(model.__dict__)
+            for key, value in model.__dict__.items():
+                if hasattr(instance, key):
+                    setattr(instance, key, value)
             session.merge(instance)
             session.commit()
         return instance
@@ -96,3 +98,22 @@ class BaseRepositoryImpl(BaseRepository):
         with self.session_scope() as session:
             session.add_all(models)
             return [self.schema.model_validate(model) for model in models]
+
+
+    # def _get_instance(self, id_key: int) -> BaseSchema:
+    #     with self.session_scope() as session:
+    #         instance = session.query(self.model).get(id_key)
+    #         if instance:
+    #             schema = self.schema.model_validate(instance)
+    #     if instance is None:
+    #         self.logger.error(f"No {self.model.__name__} instance found with id {id_key}")
+    #         raise InstanceNotFoundError(f"No {self.model.__name__} instance found with id {id_key}")
+    #     return schema
+
+    # def update(self, id_key: int, model: BaseModel) -> dict:
+    # with self.session_scope() as session:
+    #     instance = self._get_instance(id_key)
+    #     instance.update(model.__dict__)
+    #     session.merge(instance)
+    #     session.commit()
+    # return instance
